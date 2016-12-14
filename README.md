@@ -22,3 +22,9 @@ If you installed miniconda, then you'll have to get these packages as well:
  * pandas
  * scikit-learn
  * spyder
+
+
+## Conda Install
+
+`conda env create -f ./environment.yml`
+
