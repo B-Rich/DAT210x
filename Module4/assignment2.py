@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import assignment2_helper as helper
+from sklearn.decomposition import PCA
 
 # Look pretty...
 matplotlib.style.use('ggplot')
@@ -17,20 +18,22 @@ scaleFeatures = False
 #
 # .. your code here ..
 
-
+df = pd.read_csv('./Datasets/kidney_disease.csv', index_col=0)
+df = df.dropna(axis=0)
 
 # Create some color coded labels; the actual label feature
 # will be removed prior to executing PCA, since it's unsupervised.
 # You're only labeling by color so you can see the effects of PCA
-labels = ['red' if i=='ckd' else 'green' for i in df.classification]
+labels = ['red' if i == 'ckd' else 'green' for i in df.classification]
 
 
 # TODO: Use an indexer to select only the following columns:
 #       ['bgr','wc','rc']
 #
 # .. your code here ..
-
-
+df = df[['bgr', 'rc', 'wc']]
+df.rc = pd.to_numeric(df.rc, errors='coerce')
+df.wc = pd.to_numeric(df.wc, errors='coerce')
 
 # TODO: Print out and check your dataframe's dtypes. You'll probably
 # want to call 'exit()' after you print it out so you can stop the
@@ -45,8 +48,6 @@ labels = ['red' if i=='ckd' else 'green' for i in df.classification]
 #
 # .. your code here ..
 
-
-
 # TODO: PCA Operates based on variance. The variable with the greatest
 # variance will dominate. Go ahead and peek into your data using a
 # command that will check the variance of every feature in your dataset.
@@ -58,16 +59,13 @@ labels = ['red' if i=='ckd' else 'green' for i in df.classification]
 #
 # .. your code here ..
 
-
-
 # TODO: This method assumes your dataframe is called df. If it isn't,
 # make the appropriate changes. Don't alter the code in scaleFeatures()
 # just yet though!
 #
 # .. your code adjustment here ..
-if scaleFeatures: df = helper.scaleFeatures(df)
-
-
+if scaleFeatures:
+    df = helper.scaleFeatures(df)
 
 # TODO: Run PCA on your dataset and reduce it to 2 components
 # Ensure your PCA instance is saved in a variable called 'pca',
@@ -75,6 +73,9 @@ if scaleFeatures: df = helper.scaleFeatures(df)
 #
 # .. your code here ..
 
+pca = PCA(n_components=2)
+pca.fit(df)
+T = pca.transform(df)
 
 # Plot the transformed data as a scatter plot. Recall that transforming
 # the data will result in a NumPy NDArray. You can either use MatPlotLib
@@ -91,5 +92,3 @@ T = pd.DataFrame(T)
 T.columns = ['component1', 'component2']
 T.plot.scatter(x='component1', y='component2', marker='o', c=labels, alpha=0.75, ax=ax)
 plt.show()
-
-
