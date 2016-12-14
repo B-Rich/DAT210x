@@ -6,6 +6,8 @@ import math
 
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+from sklearn import manifold
+from sklearn.decomposition import PCA
 
 
 def Plot2D(T, title, x, y, num_to_plot=40):
@@ -32,7 +34,7 @@ def Plot2D(T, title, x, y, num_to_plot=40):
 # A .MAT file is a .MATLAB file. The faces dataset could have came
 # in through .png images, but we'll show you how to do that in
 # anither lab. For now, you'll see how to import .mats:
-mat = scipy.io.loadmat('Datasets/face_data.mat')
+mat = scipy.io.loadmat('./Datasets/face_data.mat')
 df = pd.DataFrame(mat['images']).T
 num_images, num_pixels = df.shape
 num_pixels = int(math.sqrt(num_pixels))
@@ -52,7 +54,12 @@ for i in range(num_images):
 # x is the principal component you want displayed on the x-axis, Can be 0 or 1
 # y is the principal component you want displayed on the y-axis, Can be 1 or 2
 #
-# .. your code here ..
+pca = PCA(n_components=3)
+pca.fit(df)
+T = pca.transform(df)
+# Plot2D(T, 'PCA Plot 01', 0, 1)
+Plot2D(T, 'PCA Plot 02', 0, 2)
+# Plot2D(T, 'PCA Plot 12', 1, 2)
 
 
 #
@@ -60,8 +67,13 @@ for i in range(num_images):
 # to THREE components. Once you've done that, call Plot2D using
 # the first two components.
 #
-# .. your code here ..
 
+iso = manifold.Isomap(n_neighbors=8, n_components=3)
+iso.fit(df)
+T = iso.transform(df)
+# Plot2D(T, 'ISO Plot 01', 0, 1)
+Plot2D(T, 'ISO Plot 02', 0, 2)
+# Plot2D(T, 'ISO Plot 12', 1, 2)
 
 #
 # TODO: If you're up for a challenge, draw your dataframes in 3D
