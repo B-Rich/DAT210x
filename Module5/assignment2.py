@@ -3,14 +3,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 
-matplotlib.style.use('ggplot') # Look Pretty
+matplotlib.style.use('ggplot')
+
 
 def showandtell(title=None):
-  if title != None: plt.savefig(title + ".png", bbox_inches='tight', dpi=300)
-  plt.show()
-  exit()
-
-
+    if title != None: plt.savefig(title + ".png", bbox_inches='tight', dpi=300)
+    plt.show()
+    exit()
 
 
 #
@@ -24,6 +23,10 @@ def showandtell(title=None):
 #
 # .. your code here ..
 
+df = pd.read_csv('./Datasets/CDR.csv')
+df['CallTime'] = pd.to_timedelta(df.CallTime)
+df['CallDate'] = pd.to_datetime(df.CallDate)
+
 
 #
 # TODO: Get a distinct list of "In" phone numbers (users) and store the values in a
@@ -32,12 +35,14 @@ def showandtell(title=None):
 #
 # .. your code here ..
 
+inbound_list = df.In.unique()
 
-# 
+#
 # TODO: Create a slice called user1 that filters to only include dataset records where the
 # "In" feature (user phone number) is equal to the first number on your unique list above
 #
 # .. your code here ..
+user1 = df[df.In == inbound_list[0]]
 
 
 # INFO: Plot all the call locations
@@ -93,7 +98,7 @@ showandtell()  # Comment this line out when you're ready to proceed
 # caller's residence:
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.scatter(user1.TowerLon,user1.TowerLat, c='g', marker='o', alpha=0.2)
+ax.scatter(user1.TowerLon, user1.TowerLat, c='g', marker='o', alpha=0.2)
 ax.set_title('Weekend Calls (<6am or >10p)')
 showandtell()  # TODO: Comment this line out when you're ready to proceed
 
@@ -125,4 +130,3 @@ showandtell()  # TODO: Comment this line out when you're ready to proceed
 # locations. You might want to use a for-loop, unless you enjoy typing.
 #
 # .. your code here ..
-
