@@ -3,11 +3,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 
+from sklearn.cluster import KMeans
+
+
 matplotlib.style.use('ggplot')
 
 
 def showandtell(title=None):
-    if title != None: plt.savefig(title + ".png", bbox_inches='tight', dpi=300)
+    if title is not None:
+        plt.savefig(title + ".png", bbox_inches='tight', dpi=300)
     plt.show()
     exit()
 
@@ -36,18 +40,19 @@ df['CallDate'] = pd.to_datetime(df.CallDate)
 # .. your code here ..
 
 inbound_list = df.In.unique()
+inbound = inbound_list.tolist()
 
 #
 # TODO: Create a slice called user1 that filters to only include dataset records where the
 # "In" feature (user phone number) is equal to the first number on your unique list above
 #
 # .. your code here ..
-user1 = df[df.In == inbound_list[0]]
+user1 = df[df.In == inbound[0]]
 
 
 # INFO: Plot all the call locations
-user1.plot.scatter(x='TowerLon', y='TowerLat', c='gray', alpha=0.1, title='Call Locations')
-showandtell()  # Comment this line out when you're ready to proceed
+# user1.plot.scatter(x='TowerLon', y='TowerLat', c='gray', alpha=0.1, title='Call Locations')
+# showandtell()  # Comment this line out when you're ready to proceed
 
 
 #
@@ -55,7 +60,7 @@ showandtell()  # Comment this line out when you're ready to proceed
 # is where domain expertise comes into play. Your intuition tells you that people are likely
 # to behave differently on weekends:
 #
-# On Weekdays:
+# On Weekends:
 #   1. People probably don't go into work
 #   2. They probably sleep in late on Saturday
 #   3. They probably run a bunch of random errands, since they couldn't during the week
@@ -73,7 +78,7 @@ showandtell()  # Comment this line out when you're ready to proceed
 # only examining records that came in on weekends (sat/sun).
 #
 # .. your code here ..
-
+user1 = user1[(df.DOW == 'Sat') | (df.DOW == 'Sun')]
 
 #
 # TODO: Further filter it down for calls that are came in either before 6AM OR after 10pm (22:00:00).
@@ -85,6 +90,9 @@ showandtell()  # Comment this line out when you're ready to proceed
 #
 # .. your code here ..
 
+start = "06:00:00"
+end = "22:00:00"
+user1 = user1[(user1.CallTime < start) | (user1.CallTime > end)]
 
 #
 # INFO: Visualize the dataframe with a scatter plot as a sanity check. Since you're familiar
@@ -98,9 +106,10 @@ showandtell()  # Comment this line out when you're ready to proceed
 # caller's residence:
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.scatter(user1.TowerLon, user1.TowerLat, c='g', marker='o', alpha=0.2)
+# ax.scatter(user1.TowerLon, user1.TowerLat, c='g', marker='o', alpha=0.2)
+user1.plot.scatter(x='TowerLon', y='TowerLat', c='gray', alpha=0.1, title='Call Locations')
 ax.set_title('Weekend Calls (<6am or >10p)')
-showandtell()  # TODO: Comment this line out when you're ready to proceed
+# showandtell()  # TODO: Comment this line out when you're ready to proceed
 
 
 
@@ -120,6 +129,14 @@ showandtell()  # TODO: Comment this line out when you're ready to proceed
 #
 # .. your code here ..
 
+latlon = user1[['TowerLon', 'TowerLat']]
+kmeans = KMeans(n_clusters=1)
+kmeans_model = kmeans.fit(latlon)
+centroids = kmeans_model.cluster_centers_
+print(centroids)
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.scatter(centroids[:, 0], centroids[:, 1], marker='x', c='red', alpha=0.5, linewidths=3, s=169)
 
 showandtell()  # TODO: Comment this line out when you're ready to proceed
 
