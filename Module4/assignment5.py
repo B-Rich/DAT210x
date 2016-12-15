@@ -13,18 +13,27 @@ matplotlib.style.use('ggplot')
 
 
 samples = []
-image_dir = './Datasets/ALOI/32/'
-for img_file in os.listdir(image_dir):
-    img = misc.imread('{}{}'.format(image_dir, img_file))
-    img = img.reshape(-1)
-    samples.append(img)
+image_dirs = [('./Datasets/ALOI/32/', 'b'), ('./Datasets/ALOI/32i/', 'r')]
+colors = []
+for image_dir, color in image_dirs:
+    for img_file in os.listdir(image_dir):
+        img = misc.imread('{}{}'.format(image_dir, img_file))
+        img = img.reshape(-1)
+        colors.append(color)
+        samples.append(img)
 
 df = pd.DataFrame.from_records(samples)
 
-iso = manifold.Isomap(n_neighbors=8, n_components=3)
+iso = manifold.Isomap(n_neighbors=6, n_components=3)
 iso.fit(df)
 T = iso.transform(df)
 
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.scatter(T[:, 0], T[:, 1], alpha=0.7, color=colors)
+ax.scatter(T[:, 1], T[:, 1], alpha=0.7, color=colors)
+ax.scatter(T[:, 1], T[:, 2], alpha=0.7, color=colors)
+plt.show()
 #
 # TODO: Write a for-loop that iterates over the images in the
 # Module4/Datasets/ALOI/32/ folder, appending each of them to
