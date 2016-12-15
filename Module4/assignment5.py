@@ -4,16 +4,26 @@ from scipy import misc
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib
 import matplotlib.pyplot as plt
+from sklearn import manifold
+
+import os
 
 # Look pretty...
 matplotlib.style.use('ggplot')
 
 
-#
-# TODO: Start by creating a regular old, plain, "vanilla"
-# python list. You can call it 'samples'.
-#
-# .. your code here .. 
+samples = []
+image_dir = './Datasets/ALOI/32/'
+for img_file in os.listdir(image_dir):
+    img = misc.imread('{}{}'.format(image_dir, img_file))
+    img = img.reshape(-1)
+    samples.append(img)
+
+df = pd.DataFrame.from_records(samples)
+
+iso = manifold.Isomap(n_neighbors=8, n_components=3)
+iso.fit(df)
+T = iso.transform(df)
 
 #
 # TODO: Write a for-loop that iterates over the images in the
@@ -27,7 +37,7 @@ matplotlib.style.use('ggplot')
 # 0-255  to  0.0-1.0  if you'd like, but that will have no
 # effect on the algorithm's results.
 #
-# .. your code here .. 
+# .. your code here ..
 
 
 #
@@ -37,13 +47,13 @@ matplotlib.style.use('ggplot')
 # in the Module4/Datasets/ALOI/32_i directory. Re-run your
 # assignment and answer the final question below.
 #
-# .. your code here .. 
+# .. your code here ..
 
 
 #
 # TODO: Convert the list to a dataframe
 #
-# .. your code here .. 
+# .. your code here ..
 
 
 
@@ -51,7 +61,7 @@ matplotlib.style.use('ggplot')
 # TODO: Implement Isomap here. Reduce the dataframe df down
 # to three components, using K=6 for your neighborhood size
 #
-# .. your code here .. 
+# .. your code here ..
 
 
 
@@ -60,7 +70,7 @@ matplotlib.style.use('ggplot')
 # can use either 'o' or '.' as your marker. Graph the first two
 # isomap components
 #
-# .. your code here .. 
+# .. your code here ..
 
 
 
@@ -69,9 +79,8 @@ matplotlib.style.use('ggplot')
 # TODO: Create a 3D Scatter plot to graph your manifold. You
 # can use either 'o' or '.' as your marker:
 #
-# .. your code here .. 
+# .. your code here ..
 
 
 
-plt.show()
-
+# plt.show()
