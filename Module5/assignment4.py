@@ -102,15 +102,15 @@ def doKMeans(data, clusters=0):
 # Remove top 5 and bottom 5 samples for each column:
 drop = {}
 for col in df.columns:
-  # Bottom 5
-  sort = df.sort_values(by=col, ascending=True)
-  if len(sort) > 5: sort=sort[:5]
-  for index in sort.index: drop[index] = True # Just store the index once
+    # Bottom 5
+    sort = df.sort_values(by=col, ascending=True)
+    if len(sort) > 5: sort=sort[:5]
+    for index in sort.index: drop[index] = True # Just store the index once
 
-  # Top 5
-  sort = df.sort_values(by=col, ascending=False)
-  if len(sort) > 5: sort=sort[:5]
-  for index in sort.index: drop[index] = True # Just store the index once
+    # Top 5
+    sort = df.sort_values(by=col, ascending=False)
+    if len(sort) > 5: sort=sort[:5]
+    for index in sort.index: drop[index] = True # Just store the index once
 
 #
 # INFO Drop rows by index. We do this all at once in case there is a
@@ -192,13 +192,7 @@ T = df # No Change
 # Do KMeans
 n_clusters = 3
 centroids, labels = doKMeans(T, n_clusters)
-
-
-#
-# TODO: Print out your centroids. They're currently in feature-space, which
-# is good. Print them out before you transform them into PCA space for viewing
-#
-# .. your code here ..
+print(centroids)
 
 
 # Do PCA *after* to visualize the results. Project the centroids as well as 
@@ -212,14 +206,14 @@ CC = display_pca.transform(centroids)
 fig = plt.figure()
 ax = fig.add_subplot(111)
 if PLOT_TYPE_TEXT:
-  # Plot the index of the sample, so you can further investigate it in your dset
-  for i in range(len(T)): ax.text(T[i,0], T[i,1], df.index[i], color=c[labels[i]], alpha=0.75, zorder=600000)
-  ax.set_xlim(min(T[:,0])*1.2, max(T[:,0])*1.2)
-  ax.set_ylim(min(T[:,1])*1.2, max(T[:,1])*1.2)
+        # Plot the index of the sample, so you can further investigate it in your dset
+        for i in range(len(T)): ax.text(T[i,0], T[i,1], df.index[i], color=c[labels[i]], alpha=0.75, zorder=600000)
+        ax.set_xlim(min(T[:,0])*1.2, max(T[:,0])*1.2)
+        ax.set_ylim(min(T[:,1])*1.2, max(T[:,1])*1.2)
 else:
-  # Plot a regular scatter plot
-  sample_colors = [ c[labels[i]] for i in range(len(T)) ]
-  ax.scatter(T[:, 0], T[:, 1], c=sample_colors, marker='o', alpha=0.2)
+        # Plot a regular scatter plot
+        sample_colors = [ c[labels[i]] for i in range(len(T)) ]
+        ax.scatter(T[:, 0], T[:, 1], c=sample_colors, marker='o', alpha=0.2)
 
 
 # Plot the Centroids as X's, and label them
@@ -233,6 +227,6 @@ if PLOT_VECTORS: drawVectors(T, display_pca.components_, df.columns, plt)
 
 # Add the cluster label back into the dataframe and display it:
 df['label'] = pd.Series(labels, index=df.index)
-print df
+print(df)
 
 plt.show()
